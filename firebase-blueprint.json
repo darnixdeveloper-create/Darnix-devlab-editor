@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "User Profile",
+      "description": "Stores user preferences and metadata",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "lastActive": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "project": {
+      "title": "Project",
+      "description": "A collection of files belonging to a user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "lang": { "type": "string" },
+              "content": { "type": "string" }
+            }
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "files"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "userProfile",
+      "description": "User profile data"
+    },
+    "/projects/{projectId}": {
+      "schema": "project",
+      "description": "User code projects"
+    }
+  }
+}
