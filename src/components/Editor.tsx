@@ -207,20 +207,32 @@ const Editor: React.FC<EditorProps> = (props) => {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <img 
-                src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.displayName}`} 
+                src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.displayName || 'Mgeni'}`} 
                 alt="Profile" 
                 className="w-7 h-7 rounded-full border border-[var(--border)]"
                 referrerPolicy="no-referrer"
               />
-              <span className="text-[12px] font-medium text-[var(--text-primary)] hidden lg:inline">{user?.displayName}</span>
+              <span className="text-[12px] font-medium text-[var(--text-primary)] hidden lg:inline">
+                {user?.displayName || 'Mgeni (Guest)'}
+              </span>
             </div>
-            <button 
-              onClick={handleLogout}
-              className="p-1.5 hover:bg-[var(--bg-editor)] rounded-md transition-colors text-[var(--text-secondary)] hover:text-[#ff7b72]"
-              title="Logout"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
+            {user ? (
+              <button 
+                onClick={handleLogout}
+                className="p-1.5 hover:bg-[var(--bg-editor)] rounded-md transition-colors text-[var(--text-secondary)] hover:text-[#ff7b72]"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            ) : (
+              <button 
+                onClick={() => window.location.reload()}
+                className="p-1.5 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] rounded-md transition-colors text-[var(--text-secondary)]"
+                title="Ingia"
+              >
+                <UserIcon className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
       </header>

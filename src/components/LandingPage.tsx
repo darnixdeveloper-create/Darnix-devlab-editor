@@ -8,16 +8,18 @@ import {
   Github, 
   Play, 
   Zap, 
-  Cloud 
+  Cloud,
+  User as UserIcon
 } from 'lucide-react';
 
 interface LandingPageProps {
   handleLogin: () => void;
+  handleGuestEntry: () => void;
   loginError: string | null;
   setLoginError: (error: string | null) => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ handleLogin, loginError, setLoginError }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ handleLogin, handleGuestEntry, loginError, setLoginError }) => {
   return (
     <div className="h-screen w-screen bg-[var(--bg-main)] overflow-y-auto overflow-x-hidden">
       {/* Landing Page */}
@@ -29,7 +31,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ handleLogin, loginError, setL
           <span className="text-xl font-bold text-[var(--text-primary)] tracking-tight">DevLab Tanzania</span>
         </div>
         <button 
-          onClick={handleLogin}
+          onClick={handleGuestEntry}
           className="px-6 py-2.5 bg-[var(--accent)] text-white rounded-full font-semibold hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-[var(--accent)]/20 flex items-center gap-2"
         >
           Anza Sasa Bure
@@ -72,15 +74,18 @@ const LandingPage: React.FC<LandingPageProps> = ({ handleLogin, loginError, setL
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button 
-                onClick={handleLogin}
+                onClick={handleGuestEntry}
                 className="w-full sm:w-auto px-10 py-4 bg-[var(--accent)] text-white rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-[var(--accent)]/30 transition-all active:scale-95 flex items-center justify-center gap-3"
               >
                 <Monitor className="w-5 h-5" />
                 Fungua Mhariri wa Kodi
               </button>
-              <button className="w-full sm:w-auto px-10 py-4 bg-[var(--bg-sidebar)] text-[var(--text-primary)] border border-[var(--border)] rounded-2xl font-bold text-lg hover:bg-[var(--bg-editor)] transition-all flex items-center justify-center gap-3">
-                <Github className="w-5 h-5" />
-                Tazama Kwenye GitHub
+              <button 
+                onClick={handleLogin}
+                className="w-full sm:w-auto px-10 py-4 bg-[var(--bg-sidebar)] text-[var(--text-primary)] border border-[var(--border)] rounded-2xl font-bold text-lg hover:bg-[var(--bg-editor)] transition-all flex items-center justify-center gap-3"
+              >
+                <UserIcon className="w-5 h-5" />
+                Ingia na Google (Hifadhi Kodi)
               </button>
             </div>
           </motion.div>

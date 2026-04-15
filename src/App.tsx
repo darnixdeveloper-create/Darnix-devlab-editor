@@ -39,6 +39,7 @@ export default function App() {
   const [newFileName, setNewFileName] = useState('');
   const [fileToDelete, setFileToDelete] = useState<number | null>(null);
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
+  const [guestMode, setGuestMode] = useState(false);
   
   // Autocomplete state
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -455,7 +456,7 @@ export default function App() {
       } else if (err.code === 'auth/popup-closed-by-user') {
         setLoginError('Ulifunga dirisha la kuingia kabla ya kukamilisha. Jaribu tena.');
       } else {
-        setLoginError('Imetokea hitilafu wakati wa kuingia. Tafadhali jaribu tena baadaye.');
+        setLoginError(`Hitilafu ya kuingia (${err.code || err.message}). Tafadhali hakikisha umeruhusu domain ya Vercel kwenye Firebase Console.`);
       }
     }
   };
@@ -476,10 +477,11 @@ export default function App() {
     );
   }
 
-  if (!user) {
+  if (!user && !guestMode) {
     return (
       <LandingPage 
         handleLogin={handleLogin} 
+        handleGuestEntry={() => setGuestMode(true)}
         loginError={loginError} 
         setLoginError={setLoginError} 
       />

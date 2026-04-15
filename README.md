@@ -39,6 +39,18 @@ Ili watu wengine waweze kuiona website yako (isikae blank kwenye GitHub):
 - **Backend/Database:** Firebase (Auth & Firestore).
 - **Build Tool:** Vite.
 
+## ⚠️ Utatuzi wa Hitilafu (Troubleshooting)
+
+Ikiwa unapata error unapoanza (Login Error):
+
+1. **Authorized Domains:** 
+   - Nenda kwenye [Firebase Console](https://console.firebase.google.com/).
+   - Chagua mradi wako.
+   - Nenda **Authentication** > **Settings** > **Authorized domains**.
+   - Bonyeza **Add Domain** na uweke domain yako ya Vercel (mfano: `darnix-devlab-editor.vercel.app`).
+2. **Enable Google Provider:**
+   - Hakikisha Google Sign-In imewashwa kwenye **Authentication** > **Sign-in method**.
+
 ## 📝 Maelezo ya Ziada
 Mradi huu umetengenezwa kwa muundo wa **Modular Architecture**, kumaanisha kodi zimegawanywa vizuri (Components, Services, Constants) ili iwe rahisi kuongeza vipengele vipya bila kuharibu mfumo uliopo.
 
