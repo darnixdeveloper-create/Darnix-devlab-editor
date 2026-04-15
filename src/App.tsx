@@ -22,12 +22,53 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [files, setFiles] = useState<FileData[]>([
+    { 
+      name: 'KARIBU.txt', 
+      lang: 'python', 
+      content: `🚀 KARIBU DEVLAB TANZANIA!
+==========================
+
+Hapa unaweza kujifunza lugha mbalimbali za programu:
+
+1. PYTHON:
+   - Inafaa kwa hesabu, data, na AI.
+   - Faili zake huishia na .py
+
+2. JAVASCRIPT:
+   - Inafaa kwa kuongeza utendaji kwenye tovuti.
+   - Faili zake huishia na .js
+
+3. HTML/CSS:
+   - Inafaa kwa kutengeneza muonekano wa tovuti.
+   - Faili zake huishia na .html au .css
+
+4. SQL:
+   - Inafaa kwa kusimamia database.
+   - Faili zake huishia na .sql
+
+💡 JINSI YA KUBADILISHA LUGHA:
+Tumia menu ya 'Lugha' iliyopo juu kulia mwa skrini yako 
+ili kubadilisha mazingira ya kodi unayotaka kutumia.
+
+Andika kodi yako, kisha bonyeza 'Run' kuona matokeo!`
+    },
     { name: 'index.html', lang: 'html', content: SNIPPETS[3].code },
     { name: 'style.css', lang: 'html', content: '/* CSS yako hapa */\nbody { background: #0d1117; }' },
     { name: 'script.js', lang: 'javascript', content: 'console.log("Habari kutoka script.js!");' }
   ]);
   const [activeFileIndex, setActiveFileIndex] = useState(0);
-  const [output, setOutput] = useState<string[]>(['// Karibu DevLab Tanzania!']);
+  const [output, setOutput] = useState<string[]>([
+    '// 🚀 Karibu DevLab Tanzania!',
+    '// Hapa unaweza kujifunza na kufanya mazoezi ya:',
+    '// • Python: Lugha ya kisasa ya programu na data.',
+    '// • JavaScript: Lugha mama ya mifumo ya tovuti.',
+    '// • HTML/CSS: Kwa ajili ya kutengeneza muonekano wa tovuti.',
+    '// • SQL: Lugha ya kusimamia na kuuliza data kwenye database.',
+    '//',
+    '// 💡 JINSI YA KUBADILISHA LUGHA:',
+    '// Tumia menu ya "Lugha" iliyopo juu kulia mwa skrini yako',
+    '// ili kubadilisha mazingira ya kodi unayotaka kutumia.'
+  ]);
   const [isRunning, setIsRunning] = useState(false);
   const [runTime, setRunTime] = useState<string | null>(null);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -40,6 +81,15 @@ export default function App() {
   const [fileToDelete, setFileToDelete] = useState<number | null>(null);
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
   const [guestMode, setGuestMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
   
   // Autocomplete state
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -498,7 +548,8 @@ export default function App() {
         clearAllFiles, handleFileUpload, handleFolderUpload, runCode, clearOutput,
         loadSnippet, handleTextareaChange, handleKeyDown, handleLangChange, getLangIcon, getLangColor,
         textareaRef, outputRef, iframeRef, fileInputRef, folderInputRef, SNIPPETS, showSuggestions, 
-        suggestions, suggestionIndex, suggestionPos, applySuggestion, createNewFile
+        suggestions, suggestionIndex, suggestionPos, applySuggestion, createNewFile,
+        darkMode, setDarkMode
       }}
     />
   );

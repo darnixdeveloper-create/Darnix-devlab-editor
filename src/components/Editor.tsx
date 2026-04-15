@@ -27,7 +27,9 @@ import {
   FolderPlus,
   Upload,
   Folder,
-  X
+  X,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { FileData, Language, Snippet, CursorPos } from '../types';
@@ -80,9 +82,19 @@ interface EditorProps {
   suggestionPos: { top: number; left: number };
   applySuggestion: (s: string) => void;
   createNewFile: () => void;
+  darkMode: boolean;
+  setDarkMode: (dark: boolean) => void;
 }
 
+const LANG_DESCRIPTIONS: Record<string, string> = {
+  python: "Python: Lugha ya programu inayotumika sana kwa data na AI.",
+  javascript: "JavaScript: Lugha inayotumika kutengeneza tovuti zinazovutia.",
+  html: "HTML/CSS: Lugha za kutengeneza muonekano na muundo wa tovuti.",
+  sql: "SQL: Lugha ya kusimamia na kuuliza data kwenye database."
+};
+
 const Editor: React.FC<EditorProps> = (props) => {
+  const [hoveredLang, setHoveredLang] = React.useState<Language | null>(null);
   const {
     files, activeFileIndex, setActiveFileIndex, output, isRunning, runTime, status,
     cursorPos, autoRun, setAutoRun, isSaving, isCreatingFile, setIsCreatingFile,
@@ -91,7 +103,8 @@ const Editor: React.FC<EditorProps> = (props) => {
     clearAllFiles, handleFileUpload, handleFolderUpload, runCode, clearOutput,
     loadSnippet, handleTextareaChange, handleKeyDown, handleLangChange, getLangIcon, getLangColor,
     textareaRef, outputRef, iframeRef, fileInputRef, folderInputRef, SNIPPETS, showSuggestions, 
-    suggestions, suggestionIndex, suggestionPos, applySuggestion, createNewFile
+    suggestions, suggestionIndex, suggestionPos, applySuggestion, createNewFile,
+    darkMode, setDarkMode
   } = props;
 
   const activeFile = files[activeFileIndex];
@@ -170,23 +183,42 @@ const Editor: React.FC<EditorProps> = (props) => {
 
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-widest mr-2 hidden md:inline">Lugha:</span>
-          <nav className="flex items-center gap-1 bg-[var(--bg-main)] p-1 rounded-lg border border-[var(--border)]">
+          <nav className="flex items-center gap-1 bg-[var(--bg-main)] p-1 rounded-lg border border-[var(--border)] relative">
             {(['python', 'javascript', 'html', 'sql'] as Language[]).map((l) => (
-              <button
-                key={l}
-                onClick={() => handleLangChange(l)}
-                className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all uppercase tracking-wider flex items-center gap-2 ${
-                  activeFile.lang === l 
-                    ? 'bg-[var(--bg-editor)] text-[var(--accent)] border border-[var(--border)] shadow-sm' 
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                }`}
-              >
-                <span className={activeFile.lang === l ? getLangColor(l) : 'text-[var(--text-secondary)]'}>
-                  {getLangIcon(l)}
-                </span>
-                <span className="hidden lg:inline">{l === 'html' ? 'HTML/CSS' : l}</span>
-                <span className="lg:hidden">{l === 'html' ? 'HTML' : l.slice(0, 2)}</span>
-              </button>
+              <div key={l} className="relative group">
+                <button
+                  onClick={() => handleLangChange(l)}
+                  onMouseEnter={() => setHoveredLang(l)}
+                  onMouseLeave={() => setHoveredLang(null)}
+                  className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all uppercase tracking-wider flex items-center gap-2 ${
+                    activeFile.lang === l 
+                      ? 'bg-[var(--bg-editor)] text-[var(--accent)] border border-[var(--border)] shadow-sm' 
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  }`}
+                >
+                  <span className={activeFile.lang === l ? getLangColor(l) : 'text-[var(--text-secondary)]'}>
+                    {getLangIcon(l)}
+                  </span>
+                  <span className="hidden lg:inline">{l === 'html' ? 'HTML/CSS' : l}</span>
+                  <span className="lg:hidden">{l === 'html' ? 'HTML' : l.slice(0, 2)}</span>
+                </button>
+
+                <AnimatePresence>
+                  {hoveredLang === l && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-[100] w-48 p-2 bg-[var(--bg-sidebar)] border border-[var(--border)] rounded-lg shadow-xl pointer-events-none"
+                    >
+                      <div className="text-[10px] text-[var(--text-primary)] leading-tight">
+                        {LANG_DESCRIPTIONS[l]}
+                      </div>
+                      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--bg-sidebar)] border-t border-l border-[var(--border)] rotate-45" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </nav>
         </div>
@@ -201,6 +233,16 @@ const Editor: React.FC<EditorProps> = (props) => {
               <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${autoRun ? 'left-[17px]' : 'left-0.5'}`} />
             </button>
           </div>
+          
+          <div className="h-6 w-px bg-[var(--border)]" />
+
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-1.5 hover:bg-[var(--bg-editor)] rounded-md transition-colors text-[var(--text-secondary)] hover:text-[var(--accent)]"
+            title={darkMode ? "Washa Light Mode" : "Washa Dark Mode"}
+          >
+            {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
           
           <div className="h-6 w-px bg-[var(--border)]" />
 
